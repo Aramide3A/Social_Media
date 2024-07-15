@@ -10,6 +10,12 @@ router.get('/posts',authenticateToken, async(req,res)=>{
     res.send(all_posts.rows)
 })
 
+//Route to see only posts from people you follow
+router.get('/posts/following', authenticateToken, async(req,res)=>{
+    const following_posts = await pool.query('SELECT * FROM post WHERE follower = $1', [req.user.id])
+    res.send(following_posts.rows)
+})
+
 //Route to create a new post 
 router.post('/posts',authenticateToken, async(req,res)=>{
     const {text} = req.body
